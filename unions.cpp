@@ -56,9 +56,10 @@ void unions::deserialize(QByteArray* source){
     if(typemini) entrySize = 8; // memcpy(flyWheel.mini, source, 8);
     unsigned int  entriesCount = packetSize/entrySize;
 
+    /*
     for(pointer = 0; pointer < entriesCount; pointer++){
         p(QString::number(pointer) + " ");
-    }
+    }*/
 
     p(QString::number(source->size()) + "\n");
     p("\n");
