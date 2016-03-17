@@ -12,9 +12,14 @@ class unions : public QMainWindow
     Q_OBJECT
 
 public:
-    void readUdpDatagrams();
+
     explicit unions(QWidget *parent = 0);
+    void bindUdpPort();
+    void readUdpDatagrams();
     ~unions();
+
+private slots:
+    void on_pushButton_clicked();
 
 private:
     Ui::unions *ui;
