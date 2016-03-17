@@ -2,6 +2,16 @@
 #include "ui_unions.h"
 #include <QUdpSocket>
 
+    struct packetHeader{
+        unsigned short type;
+        unsigned short reserved16bit;
+        unsigned long  size;
+    };
+
+    struct CRCFooter{
+        // If demand..
+    };
+
     struct entry{
         quint32 x;
         qint32  y;   // 64 bits
@@ -12,8 +22,9 @@
             // Total : 128 bits
     };
 
-    union eu{
+    union entryUnion{
         entry e;
+        packetHeader header;
         char packed[16];
         char mini[8];
     };
@@ -32,13 +43,25 @@ void unions::p(QString str){
 }
 
 void unions::deserialize(QByteArray* source){
-    eu ed;
-    int typemini = 0; // 0 - standart, 1 - mini pack (x, y choords. only)
+    entryUnion flyWheel;    // Someone likes to give strange names to variables..
+    int typemini    = 0;    //  0 - standart, 1 - mini pack (x, y choords. only)
+    int entrySize   = 16;   // 16 - standart, 8 - mini
+    quint16 offset  = 0; // позиция чтения, 0 - начало тела UDP пакета
+    quint16 pointer;     // позиция чтения, кол-во entries начиная от offset.
 
-    if(typemini)    memcpy(ed.mini, source, 8);
-    else            memcpy(ed.mini, source, 16);
+    // посмотрим, какой тип.
+    memcpy(flyWheel.packed, source, 8);
+    typemini    = flyWheel.header.type;
+    unsigned long packetSize  = flyWheel.header.size;
+    if(typemini) entrySize = 8; // memcpy(flyWheel.mini, source, 8);
+    unsigned int  entriesCount = packetSize/entrySize;
 
+    for(pointer = 0; pointer < entriesCount; pointer++){
+        p(QString::number(pointer) + " ");
+    }
 
+    p(QString::number(source->size()) + "\n");
+    p("\n");
 }
 
 void unions::readUdpDatagrams()
