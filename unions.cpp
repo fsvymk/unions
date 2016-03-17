@@ -27,6 +27,9 @@ unions::unions(QWidget *parent) :
     ui->setupUi(this);
 }
 
+void unions::p(QString str){
+    ui->plainTextEdit->appendPlainText(str);
+}
 
 void unions::bindUdpPort()
 {
@@ -47,6 +50,8 @@ void unions::readUdpDatagrams()
                                 &sender, &senderPort);
 
         QString current = sender.toString();
+
+
     }
 }
 

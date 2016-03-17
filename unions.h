@@ -15,6 +15,7 @@ public:
 
     explicit unions(QWidget *parent = 0);
     void bindUdpPort();
+    void p(QString str);
     void readUdpDatagrams();
     ~unions();
 
