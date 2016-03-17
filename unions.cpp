@@ -31,7 +31,13 @@ void unions::p(QString str){
     ui->plainTextEdit->appendPlainText(str);
 }
 
-void unions::deserialize(){
+void unions::deserialize(QByteArray* source){
+    eu ed;
+    int typemini = 0; // 0 - standart, 1 - mini pack (x, y choords. only)
+
+    if(typemini)    memcpy(ed.mini, source, 8);
+    else            memcpy(ed.mini, source, 16);
+
 
 }
 
@@ -51,7 +57,7 @@ void unions::readUdpDatagrams()
         p("\n\n");
         p(datagram.toHex());
 
-        deserialize();
+        deserialize(&datagram);
     }
 }
 

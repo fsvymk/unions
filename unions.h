@@ -22,6 +22,7 @@ public:
 private slots:
     void on_pushButton_clicked();
     void readUdpDatagrams();
+    void deserialize(QByteArray *source);
 
 private:
     Ui::unions *ui;
