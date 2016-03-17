@@ -31,11 +31,8 @@ void unions::p(QString str){
     ui->plainTextEdit->appendPlainText(str);
 }
 
-void unions::bindUdpPort()
-{
-    quint16 port = ui->lineEdit->text().toInt();
-    if (udpServerSocket.bind(port)) { ui->pushButton->setEnabled(false);}
-    else {      ui->plainTextEdit->appendPlainText("Ошибка запуска сервера");     }
+void unions::deserialize(){
+
 }
 
 void unions::readUdpDatagrams()
@@ -51,10 +48,22 @@ void unions::readUdpDatagrams()
 
         QString current = sender.toString();
 
+        p("\n\n");
+        p(datagram.toHex());
 
+        deserialize();
     }
 }
 
+void unions::bindUdpPort()
+{
+    quint16 port = ui->lineEdit->text().toInt();
+    if (udpServerSocket.bind(port)) { ui->pushButton->setEnabled(false);}
+    else {      ui->plainTextEdit->appendPlainText("Ошибка запуска сервера");     }
+
+    connect(&udpServerSocket, SIGNAL(readyRead()),
+               this, SLOT(readUdpDatagrams()));
+}
 
 unions::~unions()
 {
