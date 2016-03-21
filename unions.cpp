@@ -50,16 +50,37 @@ void unions::deserialize(QByteArray* source){
     quint16 pointer;     // позиция чтения, кол-во entries начиная от offset.
 
     // посмотрим, какой тип.
-    memcpy(flyWheel.packed, source, 8);
-    typemini    = flyWheel.header.type;
-    unsigned long packetSize  = flyWheel.header.size;
-    if(typemini) entrySize = 8; // memcpy(flyWheel.mini, source, 8);
-    unsigned int  entriesCount = packetSize/entrySize;
 
-    /*
+    flyWheel.header.type = 0;
+    flyWheel.header.size = 2;
+    //memcpy(flyWheel.packed, source, 8);
+
+    typemini    = flyWheel.header.type;
+    p("\nType: " + QString::number(typemini));
+
+    int packetSize  = flyWheel.header.size;
+    p("\npacket size: " + QString::number(packetSize));
+    int ss = source->size();
+
+    // отсекаем ошибочные значения
+
+    // длина внутреннего пакета не может превышать длину тела UDP
+    if (packetSize > ss) packetSize = ss;
+
+    if(typemini) entrySize = 8;
+    p("\nentry size: " + QString::number(entrySize));
+
+    unsigned int entriesCount = packetSize/entrySize;
+
     for(pointer = 0; pointer < entriesCount; pointer++){
-        p(QString::number(pointer) + " ");
-    }*/
+
+        // memcpy(flyWheel.mini, source, 8);
+        memcpy(flyWheel.mini, source, 8);
+        unsigned long x = flyWheel.e.x;
+        unsigned long y = flyWheel.e.y;
+
+        p(QString::number(pointer) + ": x=" + QString::number(x)+ " y= "+ QString::number(y));
+    }
 
     p(QString::number(source->size()) + "\n");
     p("\n");
@@ -88,7 +109,8 @@ void unions::readUdpDatagrams()
 void unions::bindUdpPort()
 {
     quint16 port = ui->lineEdit->text().toInt();
-    if (udpServerSocket.bind(port)) { ui->pushButton->setEnabled(false);}
+    if (udpServerSocket.bind(port)) { ui->pushButton->setEnabled(false);
+     ui->plainTextEdit->appendPlainText("Сервер запущен.");}
     else {      ui->plainTextEdit->appendPlainText("Ошибка запуска сервера");     }
 
     connect(&udpServerSocket, SIGNAL(readyRead()),
