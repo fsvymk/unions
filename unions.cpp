@@ -53,7 +53,7 @@ void unions::deserialize(QByteArray* source){
 
     flyWheel.header.type = 0;
     flyWheel.header.size = 2;
-    //memcpy(flyWheel.packed, source, 8);
+    memcpy(flyWheel.packed, source, 8);
 
     typemini    = flyWheel.header.type;
     p("\nType: " + QString::number(typemini));
@@ -79,6 +79,7 @@ void unions::deserialize(QByteArray* source){
         unsigned long x = flyWheel.e.x;
         unsigned long y = flyWheel.e.y;
 
+
         p(QString::number(pointer) + ": x=" + QString::number(x)+ " y= "+ QString::number(y));
     }
 
@@ -100,7 +101,21 @@ void unions::readUdpDatagrams()
         QString current = sender.toString();
 
         p("\n\n");
-        p(datagram.toHex());
+
+        QString TH = datagram.toHex();
+        QString THR;
+        int THi;
+
+        for(THi=0; THi<TH.size()/8; THi++){
+
+            THR.append(TH.mid(THi*8, 8));
+            THR.append("         ");
+            if(THi%4 == 0) THR.append("\n");
+        }
+
+        p(THR);
+        //p(datagram.toHex());
+
 
         deserialize(&datagram);
     }
