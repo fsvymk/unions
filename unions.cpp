@@ -109,8 +109,8 @@ void unions::readUdpDatagrams()
         for(THi=0; THi<TH.size()/8; THi++){
 
             THR.append(TH.mid(THi*8, 8));
-            THR.append("         ");
-            if(THi%4 == 0) THR.append("\n");
+            THR.append("  ");
+            if(THi%4 == 3) THR.append("\n");
         }
 
         p(THR);
